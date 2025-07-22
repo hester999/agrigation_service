@@ -24,13 +24,13 @@ func NewServiceRepo(db *sqlx.DB, logger *log.Logger) *ServiceRepo {
 }
 
 type DTO struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	Price     int       `json:"price"`
-	UserID    string    `json:"user_id"`
-	StartDate time.Time `json:"start_date"`
-	EndDate   time.Time `json:"end_date"`
-	CreatedAt time.Time `json:"created_at"`
+	ID        string    `db:"id"`
+	Name      string    `db:"name"`
+	Price     int       `db:"price"`
+	UserID    string    `db:"user_id"`
+	StartDate time.Time `db:"start_date"`
+	EndDate   time.Time `db:"end_date"`
+	CreatedAt time.Time `db:"created_at"`
 }
 
 func (s *ServiceRepo) Create(service model.Service) (model.CreateResponse, error) {
@@ -121,13 +121,15 @@ func (s *ServiceRepo) GetAll() (model.GetAllResponse, error) {
 	err := s.db.Select(&tmp, query)
 
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			s.logger.Println("GetAll error:", err)
-			return model.GetAllResponse{Data: make([]model.Service, 0)}, apperr.ErrNotFound
-		}
 		s.logger.Println("GetAll error:", err)
 		return model.GetAllResponse{Data: make([]model.Service, 0)}, err
 	}
+
+	if len(tmp) == 0 {
+		s.logger.Println("Not found services")
+		return model.GetAllResponse{Data: make([]model.Service, 0)}, apperr.ErrNotFound
+	}
+
 	res := model.GetAllResponse{
 		Data: make([]model.Service, 0, len(tmp)),
 	}

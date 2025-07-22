@@ -7,6 +7,8 @@ import (
 	"errors"
 	"github.com/gorilla/mux"
 	"net/http"
+	"time"
+	"unicode/utf8"
 )
 
 func (s *ServiceHandler) UpdateHandler(w http.ResponseWriter, r *http.Request) {
@@ -14,7 +16,7 @@ func (s *ServiceHandler) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := mux.Vars(r)["id"]
 	req := struct {
-		Name      *string `json:"name"`
+		Name      *string `json:"service_name"`
 		Price     *int    `json:"price"`
 		StartDate *string `json:"start_date"`
 		Duration  *int    `json:"duration"`
@@ -26,6 +28,17 @@ func (s *ServiceHandler) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(ErrDTO{
 			Message: "Bad Request",
+			Code:    http.StatusBadRequest,
+		})
+		return
+	}
+
+	err = s.validationUpdate(req.Name, req.Price, req.Duration)
+	if err != nil {
+		s.logger.Println("error validating update request", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrDTO{
+			Message: err.Error(),
 			Code:    http.StatusBadRequest,
 		})
 		return
@@ -44,7 +57,7 @@ func (s *ServiceHandler) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 			s.logger.Println("service not found")
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(ErrDTO{
-				Message: "Not Found",
+				Message: "service not found",
 				Code:    http.StatusNotFound,
 			})
 			return
@@ -58,19 +71,29 @@ func (s *ServiceHandler) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	resp := struct {
+		ID        string    `json:"id"`
+		Name      string    `json:"service_name"`
+		Price     int       `json:"price"`
+		UserID    string    `json:"user_id"`
+		StartDate time.Time `json:"start_date"`
+		EndDate   time.Time `json:"end_date"`
+		CreatedAt time.Time `json:"created_at"`
+	}{res.ID, res.Name, res.Price, res.UserID, res.StartDate, res.EndDate, res.CreatedAt}
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(res)
+	json.NewEncoder(w).Encode(resp)
 
 }
 
-//func (s *ServiceHandler) validationUpdate(name, startDate string, price, duration int) error {
-//	if name == "" {
-//		return apperr.ErrNameIsRequired
-//	}
-//	if startDate == "" {
-//		return apperr.ErrDataIsRequired
-//	}
-//	if duration <= "" {
-//		return apperr.ErrDataIsRequired
-//	}
-//}
+func (s *ServiceHandler) validationUpdate(name *string, price, duration *int) error {
+	if name != nil && utf8.RuneCountInString(*name) > 50 {
+		return apperr.ErrNameTooLong
+	}
+	if price != nil && *price <= 0 {
+		return apperr.ErrInvalidPrice
+	}
+	if duration != nil && *duration <= 0 {
+		return apperr.ErrInvalidDuration
+	}
+	return nil
+}

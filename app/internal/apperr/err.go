@@ -10,4 +10,5 @@ var (
 	ErrInvalidPrice    = errors.New("invalid price")
 	ErrInvalidDuration = errors.New("invalid duration")
 	ErrDataIsRequired  = errors.New("data is required")
+	ErrNameTooLong     = errors.New("name too long")
 )

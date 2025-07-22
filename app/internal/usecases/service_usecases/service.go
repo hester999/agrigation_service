@@ -2,6 +2,7 @@ package service_usecases
 
 import (
 	"app/internal/model"
+	"fmt"
 	"github.com/google/uuid"
 	"log"
 	"strings"
@@ -19,15 +20,6 @@ func NewService(repo Service, logger *log.Logger) *ServiceUsecases {
 		logger: logger,
 	}
 }
-
-//type UsecasesService interface {
-//	Create(request model.CreateRequest) (model.CreateResponse, error)
-//	Update(request model.UpdateRequest) (model.UpdateResponse, error)
-//	GetByID(id string) (model.Service, error)
-//	GetAll() (model.GetAllResponse, error)
-//	GetTotalPrice(userID, serviceName string, from, to time.Time) (int, error)
-//	DeleteByID(id string) error
-//}
 
 func (s *ServiceUsecases) Create(request model.CreateRequest) (model.CreateResponse, error) {
 
@@ -96,12 +88,17 @@ func (s *ServiceUsecases) compareUpdate(old *model.Service, new *model.UpdateReq
 	var updatedStartDate time.Time
 	useUpdatedStart := false
 
+	// Обновление имени
 	if new.Name != nil {
 		old.Name = *new.Name
 	}
+
+	// Обновление цены
 	if new.Price != nil {
 		old.Price = *new.Price
 	}
+
+	// Обновление даты начала
 	if new.StartDate != nil {
 		start, err := s.normalizeData(*new.StartDate)
 		if err != nil {
@@ -113,14 +110,19 @@ func (s *ServiceUsecases) compareUpdate(old *model.Service, new *model.UpdateReq
 		useUpdatedStart = true
 	}
 
+	// Обновление длительности
 	if new.Duration != nil {
-		var baseStart time.Time
+		// Если обновили start_date — используем его как базу
+		base := old.StartDate
 		if useUpdatedStart {
-			baseStart = updatedStartDate
-		} else {
-			baseStart = old.StartDate
+			base = updatedStartDate
 		}
-		old.EndDate = baseStart.AddDate(0, *new.Duration, 0).UTC()
+		old.EndDate = base.AddDate(0, *new.Duration, 0).UTC()
+	} else if useUpdatedStart {
+		// Если duration не обновляли, но обновили start_date
+		// пересчитываем end_date на основе текущей длительности
+		duration := int(old.EndDate.Sub(old.StartDate).Hours() / 24 / 30)
+		old.EndDate = updatedStartDate.AddDate(0, duration, 0).UTC()
 	}
 
 	return nil
@@ -178,5 +180,15 @@ func (s *ServiceUsecases) DeleteByID(id string) error {
 
 func (s *ServiceUsecases) normalizeData(data string) (time.Time, error) {
 	data = strings.TrimSpace(data)
-	return time.Parse("2006-01-02", data)
+
+	if t, err := time.Parse("2006-01-02", data); err == nil {
+		return t, nil
+	}
+
+	if t, err := time.Parse("01-2006", data); err == nil {
+
+		return time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, time.UTC), nil
+	}
+
+	return time.Time{}, fmt.Errorf("cannot parse date: %s", data)
 }
