@@ -3,10 +3,9 @@ server:
   port: 9000
 
 postgres:
-  host: "localhost"
+  host: "db"
   port: 5432
   user: "admin"
   password: "123"
   dbname: "service"
   sslmode: "disable"
-

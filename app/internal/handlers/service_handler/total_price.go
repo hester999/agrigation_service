@@ -4,16 +4,25 @@ import (
 	"app/internal/apperr"
 	"encoding/json"
 	"errors"
-	"github.com/gorilla/mux"
 	"net/http"
 )
 
+// TotalPrice @Summary      Calculate total service price
+// @Description  Returns total sum of services by user and optional service name in date range
+// @Tags         Services
+// @Accept       json
+// @Produce      json
+// @Param        totalPriceRequest body dto.TotalRequestDTO true "Total price request"
+// @Success      200  {object}  dto.ResponseTotalDTO
+// @Failure      400  {object}  dto.ErrDTO400
+// @Failure      404  {object}  dto.ErrDTO404
+// @Failure      500  {object}  dto.ErrDTO500
+// @Router       /services/total/{id} [post]
 func (s *ServiceHandler) TotalPrice(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
-	id := mux.Vars(r)["id"]
-
 	req := struct {
+		ID          string `json:"id"`
 		ServiceName string `json:"service_name"`
 		From        string `json:"from"`
 		To          string `json:"to"`
@@ -30,7 +39,7 @@ func (s *ServiceHandler) TotalPrice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = s.validateTotalPrice(req.ServiceName, req.From, req.To)
+	err = s.validateTotalPrice(req.ID, req.ServiceName, req.From, req.To)
 	if err != nil {
 		s.logger.Println("validateTotalPrice error: ", err)
 		w.WriteHeader(http.StatusBadRequest)
@@ -39,16 +48,24 @@ func (s *ServiceHandler) TotalPrice(w http.ResponseWriter, r *http.Request) {
 			Message: err.Error(),
 		})
 	}
-	res, err := s.usecase.GetTotalPrice(id, req.ServiceName, req.From, req.To)
+	res, err := s.usecase.GetTotalPrice(req.ID, req.ServiceName, req.From, req.To)
 
 	if err != nil {
 		if errors.Is(err, apperr.ErrNotFound) {
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(ErrDTO{
 				Code:    http.StatusNotFound,
-				Message: "user not found",
+				Message: "not found",
 			})
+			return
 		}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(ErrDTO{
+			Code:    http.StatusInternalServerError,
+			Message: "internal server error",
+		})
+		return
+
 	}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(struct {
@@ -56,7 +73,10 @@ func (s *ServiceHandler) TotalPrice(w http.ResponseWriter, r *http.Request) {
 	}{res})
 }
 
-func (s *ServiceHandler) validateTotalPrice(name, from, to string) error {
+func (s *ServiceHandler) validateTotalPrice(id, name, from, to string) error {
+	if id == "" {
+		return apperr.ErrDataIsRequired
+	}
 	if name == "" {
 		return apperr.ErrNameIsRequired
 	}

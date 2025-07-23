@@ -1,18 +1,25 @@
 package main
 
 import (
+	_ "app/docs"
 	"app/internal/config"
 	"app/internal/db"
 	"app/internal/handlers/service_handler"
+	_ "app/internal/handlers/service_handler"
 	"app/internal/logger"
 	"app/internal/repo/service_repo"
 	"app/internal/router"
 	"app/internal/usecases/service_usecases"
 	"fmt"
 	"github.com/gorilla/mux"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"log"
 	"net/http"
 )
+
+// @title Aggregation Service API
+// @version 1.0
+// @description Сервис агрегации данных
 
 func main() {
 
@@ -38,7 +45,7 @@ func main() {
 	handler := service_handler.NewServiceRepo(usecases, handlerLoger)
 
 	r := mux.NewRouter()
-	//r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 	app := router.NewRouter(
 		handler,
 	)
@@ -47,3 +54,5 @@ func main() {
 	log.Println("Starting server on " + serverAddr)
 	log.Fatal(http.ListenAndServe(serverAddr, r))
 }
+
+//todo пагинация, сборка, тесты

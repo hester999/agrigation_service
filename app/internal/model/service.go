@@ -54,3 +54,10 @@ type UpdateResponse struct {
 type GetAllResponse struct {
 	Data []Service
 }
+
+type TotalPriceRequest struct {
+	ID          string
+	ServiceName string
+	From        string
+	To          string
+}

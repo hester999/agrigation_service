@@ -6,12 +6,23 @@ import (
 	"errors"
 	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
 
 type ResponseDTO struct {
 	Data []ServiceDTO `json:"data"`
 }
 
+// GetByID @Summary      Получить подписку по ID
+// @Description  Возвращает подписку по её идентификатору
+// @Tags         Services
+// @Produce      json
+// @Param        id path string true "ID подписки"
+// @Success      200 {object} dto.ServiceDTO
+// @Failure      400 {object} dto.ErrDTO400 "ID не передан"
+// @Failure      404 {object} dto.ErrDTO404 "Подписка не найдена"
+// @Failure      500 {object} dto.ErrDTO500 "Внутренняя ошибка"
+// @Router       /api/v1/services/{id} [get]
 func (s *ServiceHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
@@ -60,16 +71,70 @@ func (s *ServiceHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
+// GetAll  @Summary      Получить все подписки
+// @Description  Возвращает список всех подписок с пагинацией
+// @Tags         Services
+// @Produce      json
+// @Param        limit  query int false "Ограничение количества результатов"
+// @Param        offset query int false "Смещение для пагинации"
+// @Success      200 {object} dto.ResponseDTO
+// @Failure      400 {object} service_handler.ErrDTO "Некорректные limit или offset"
+// @Failure      404 {object} service_handler.ErrDTOArr "Подписки не найдены"
+// @Failure      500 {object} service_handler.ErrDTO "Внутренняя ошибка"
+// @Router       /api/v1/services [get]
 func (s *ServiceHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	res, err := s.usecase.GetAll()
+
+	var limit, offset int
+	var err error
+
+	limitStr := r.URL.Query().Get("limit")
+	if limitStr != "" {
+		limit, err = strconv.Atoi(limitStr)
+		if err != nil {
+			s.logger.Println("invalid limit", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(ErrDTO{
+				Message: "internal server error",
+				Code:    http.StatusInternalServerError,
+			})
+			return
+		}
+	}
+
+	offsetStr := r.URL.Query().Get("offset")
+	if offsetStr != "" {
+		offset, err = strconv.Atoi(offsetStr)
+		if err != nil {
+			s.logger.Println("invalid offset", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(ErrDTO{
+				Message: "internal server error",
+				Code:    http.StatusInternalServerError,
+			})
+			return
+		}
+	}
+
+	err = s.validateLimitOffset(limit, offset)
+	if err != nil {
+		s.logger.Println("invalid offset,limit", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrDTO{
+			Message: err.Error(),
+			Code:    http.StatusBadRequest,
+		})
+		return
+	}
+	res, err := s.usecase.GetAll(limit, offset)
 	if err != nil {
 		if errors.Is(err, apperr.ErrNotFound) {
 			s.logger.Println("services not found", err)
 			w.WriteHeader(http.StatusNotFound)
-			json.NewEncoder(w).Encode(ErrDTO{
+			json.NewEncoder(w).Encode(ErrDTOArr{
 				Message: "services not found",
 				Code:    http.StatusNotFound,
+				Data:    []interface{}{},
 			})
 			return
 		}
@@ -100,4 +165,14 @@ func (s *ServiceHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(resp)
+}
+
+func (s *ServiceHandler) validateLimitOffset(limit, offset int) error {
+	if limit < 0 {
+		return apperr.ErrInvalidLimit
+	}
+	if offset < 0 {
+		return apperr.ErrInvalidOffset
+	}
+	return nil
 }

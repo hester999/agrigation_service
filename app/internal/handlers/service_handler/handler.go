@@ -15,11 +15,10 @@ type ErrDTO struct {
 	Code    int    `json:"code"`
 }
 
-func NewServiceRepo(usecases Service, log *log.Logger) *ServiceHandler {
-	return &ServiceHandler{
-		usecase: usecases,
-		logger:  log,
-	}
+type ErrDTOArr struct {
+	Message string      `json:"message"`
+	Code    int         `json:"code"`
+	Data    interface{} `json:"data"`
 }
 
 type ServiceDTO struct {
@@ -30,4 +29,11 @@ type ServiceDTO struct {
 	StartDate time.Time `json:"start_date"`
 	EndDate   time.Time `json:"end_date"`
 	CreatedAt time.Time `json:"created_at"`
+}
+
+func NewServiceRepo(usecases Service, log *log.Logger) *ServiceHandler {
+	return &ServiceHandler{
+		usecase: usecases,
+		logger:  log,
+	}
 }

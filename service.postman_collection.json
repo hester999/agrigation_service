@@ -1,0 +1,884 @@
+{
+	"info": {
+		"_postman_id": "85ba42d7-087e-450b-9fe9-21e00cfa4ddf",
+		"name": "service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34108934"
+	},
+	"item": [
+		{
+			"name": "Create",
+			"item": [
+				{
+					"name": "создать подписку",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"service_name\": \"yandex_plus\",\n    \"price\": 40,\n    \"user_id\": \"81f4b2ae-4af4-4e15-8c85-7a324b6f0c58\",\n    \"start_date\":\"07-2025\",\n    \"duration\" : 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/api/v1/services",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"v1",
+								"services"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "невалидный json 400",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service_name\": \"yandex_plus\",\r\n    \"price\": 400,\r\n    \"user_id\": \"81f4b2ae-4af4-4e15-8c85-7a324b6f0c58\",\r\n    \"start_date\":\"07-2025\",\r\n    \"duration\" : \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/api/v1/services",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"v1",
+								"services"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "пустое имя 400",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service_name\": \"\",\r\n    \"price\": 400,\r\n    \"user_id\": \"81f4b2ae-4af4-4e15-8c85-7a324b6f0c58\",\r\n    \"start_date\":\"07-2025\",\r\n    \"duration\" :  1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/api/v1/services",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"v1",
+								"services"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "невалидная цена 400",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service_name\": \"test\",\r\n    \"price\": -1,\r\n    \"user_id\": \"81f4b2ae-4af4-4e15-8c85-7a324b6f0c58\",\r\n    \"start_date\":\"07-2025\",\r\n    \"duration\" :  1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/api/v1/services",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"v1",
+								"services"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "пустой userID 400",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service_name\": \"test\",\r\n    \"price\": 100,\r\n    \"user_id\": \"\",\r\n    \"start_date\":\"07-2025\",\r\n    \"duration\" :  1\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9000/api/v1/services",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"v1",
+								"services"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "пустая дата 400",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service_name\": \"test\",\r\n    \"price\": 100,\r\n    \"user_id\": \"81f4b2ae-4af4-4e15-8c85-7a324b6f0c58\",\r\n    \"start_date\":\"\",\r\n    \"duration\" :  1\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9000/api/v1/services",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"v1",
+								"services"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "невалидная длительность подписки 400",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service_name\": \"yandex_plus\",\r\n    \"price\": 400,\r\n    \"user_id\": \"81f4b2ae-4af4-4e15-8c85-7a324b6f0c58\",\r\n    \"start_date\":\"07-2025\",\r\n    \"duration\" : -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/api/v1/services",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"v1",
+								"services"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get",
+			"item": [
+				{
+					"name": "Get All",
+					"item": [
+						{
+							"name": "получить все подписки 404",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "получить все подписки",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "невалидный лимит 400",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services?limit=-1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "-1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "невалидный оффсет 400",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services?offset=-1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "-1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "получение всех подписок с  limit offset",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services?limit=2&offset=2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "2"
+										},
+										{
+											"key": "offset",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get by ID",
+					"item": [
+						{
+							"name": "получить по id 404",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_name\": \"yandex_plus\",\r\n    \"price\": 400,\r\n    \"user_id\": \"81f4b2ae-4af4-4e15-8c85-7a324b6f0c58\",\r\n    \"start_date\":\"07-2025\",\r\n    \"duration\" : -1\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/bfdc4d9a-7d02-4354-bec1-563c73d4d6b8",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"bfdc4d9a-7d02-4354-bec1-563c73d4d6b8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Получить по id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/01d70270-d229-4e9b-b2e5-a3b462f6c314",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"01d70270-d229-4e9b-b2e5-a3b462f6c314"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "total price",
+					"item": [
+						{
+							"name": "получить сумму 404",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{   \n    \"id\": \"81f4b2ae-4af4-4e15-8c85-7a324b6f0c58\",\n    \"service_name\" : \"yandex_plus\",\n    \"from\" : \"08-2025\",\n    \"to\" : \"10-2025\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/total",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"total"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "суммарная стоимость за период",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{   \r\n    \"id\": \"81f4b2ae-4af4-4e15-8c85-7a324b6f0c58\",\r\n    \"service_name\" : \"yandex_plus\",\r\n    \"from\" : \"07-2025\",\r\n    \"to\" : \"10-2025\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/total",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"total"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Delete",
+			"item": [
+				{
+					"name": "удалить по id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service_name\": \"yandex_plus\",\r\n    \"price\": 400,\r\n    \"user_id\": \"81f4b2ae-4af4-4e15-8c85-7a324b6f0c58\",\r\n    \"start_date\":\"07-2025\",\r\n    \"duration\" : -1\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9000/api/v1/services/2043cc42-3387-4d83-b92f-83a62b05fda9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"v1",
+								"services",
+								"2043cc42-3387-4d83-b92f-83a62b05fda9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "удалить не существующую подписку 404",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/api/v1/services/bfdc4d9a-7d02-4354-bec1-563c73d4d6b8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"v1",
+								"services",
+								"bfdc4d9a-7d02-4354-bec1-563c73d4d6b8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "update",
+			"item": [
+				{
+					"name": "patch",
+					"item": [
+						{
+							"name": "подписка не найдена 404",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_name\" : \"alalla\",\r\n    \"price\":123,\r\n    \"start_date\":\"07-25\",\r\n    \"duration\" : 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/8fa5935d-4219-4083-872a-653397d8a984",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"8fa5935d-4219-4083-872a-653397d8a984"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "невалидный json 400",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_name\" : \"alalla\"\r\n    \"price\":123,\r\n    \"start_date\":\"07-25\",\r\n    \"duration\" : 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/bdd9f1de-4870-4200-ad17-354f1beb69a4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"bdd9f1de-4870-4200-ad17-354f1beb69a4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "невалидная цена 400",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_name\" : \"alalla\",\r\n    \"price\":-1,\r\n    \"start_date\":\"07-25\",\r\n    \"duration\" : 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/bdd9f1de-4870-4200-ad17-354f1beb69a4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"bdd9f1de-4870-4200-ad17-354f1beb69a4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "невалидная продолжительность подписки 400",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_name\" : \"alalla\",\r\n    \"price\":123,\r\n    \"start_date\":\"07-25\",\r\n    \"duration\" : -1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/bdd9f1de-4870-4200-ad17-354f1beb69a4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"bdd9f1de-4870-4200-ad17-354f1beb69a4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "обновление даты начала подписки 400",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"start_date\" : \"08-2025\"\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/bdd9f1de-4870-4200-ad17-354f1beb69a4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"bdd9f1de-4870-4200-ad17-354f1beb69a4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "обновление подписки 400",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"duration\": 3\r\n}\r\n\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/bdd9f1de-4870-4200-ad17-354f1beb69a4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"bdd9f1de-4870-4200-ad17-354f1beb69a4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "обновление имени",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_name\" : \"test1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/bdd9f1de-4870-4200-ad17-354f1beb69a4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"bdd9f1de-4870-4200-ad17-354f1beb69a4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "обновление цены",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"price\" : 101010\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/bdd9f1de-4870-4200-ad17-354f1beb69a4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"bdd9f1de-4870-4200-ad17-354f1beb69a4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "обновление даты начала + длительность",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"duration\": 3,\r\n    \"start_date\": \"10-2025\"\r\n}\r\n\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/bdd9f1de-4870-4200-ad17-354f1beb69a4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"bdd9f1de-4870-4200-ad17-354f1beb69a4"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "put",
+					"item": [
+						{
+							"name": "создает новую подписку , через put",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_name\": \"yandex_plus\",\r\n    \"price\": 40,\r\n    \"user_id\": \"b6702108-f752-47a9-b14e-15a7422341ab\",\r\n    \"start_date\":\"07-2025\",\r\n    \"duration\" : 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/0f40c1a9-1dd6-4c1c-9d0b-3282b6bf9206",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"0f40c1a9-1dd6-4c1c-9d0b-3282b6bf9206"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "обновляет полностью по id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"service_name\": \"more.tv\",\r\n    \"price\": 8000,\r\n    \"user_id\": \"b6702108-f752-47a9-b14e-15a7422341ab\",\r\n    \"start_date\":\"01-2026\",\r\n    \"duration\" : 12\r\n}\r\n\r\n//нет запросов на ошибки, так как внутри они  используют  update и create",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/services/0f40c1a9-1dd6-4c1c-9d0b-3282b6bf9206",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"services",
+										"0f40c1a9-1dd6-4c1c-9d0b-3282b6bf9206"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

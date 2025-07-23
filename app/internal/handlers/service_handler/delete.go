@@ -8,6 +8,15 @@ import (
 	"net/http"
 )
 
+// Delete @Summary      Удаление подписки
+// @Description  Удаляет подписку по ID
+// @Tags         Services
+// @Produce      json
+// @Param        id path string true "ID подписки"
+// @Success      200 "Подписка успешно удалена"
+// @Failure      404 {object} dto.ErrDTO404 "Подписка не найдена"
+// @Failure      500 {object} dto.ErrDTO500 "Внутренняя ошибка"
+// @Router       /api/v1/services/{id} [delete]
 func (s *ServiceHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
