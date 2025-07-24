@@ -1,34 +1,34 @@
-package service_usecases
+package subscription
 
 import (
 	"app/internal/model"
 	"time"
 )
 
-func (s *ServiceUsecases) Update(id string, request *model.UpdateRequest) (model.UpdateResponse, error) {
-	service, err := s.repo.GetByID(id)
+func (s *SubscriptionUsecases) Update(id string, request *model.UpdateRequest) (model.UpdateResponse, error) {
+	subscription, err := s.repo.GetByID(id)
 	if err != nil {
-		s.logger.Println("get service error:", err)
+		s.logger.Println("get subscription error:", err)
 		return model.UpdateResponse{}, err
 	}
 
-	err = s.compareUpdate(&service, request)
+	err = s.compareUpdate(&subscription, request)
 	if err != nil {
 		s.logger.Println("compare update error:", err)
 		return model.UpdateResponse{}, err
 	}
 
-	service.CreatedAt = time.Now().UTC()
+	subscription.CreatedAt = time.Now().UTC()
 
-	updated, err := s.repo.Update(service)
+	updated, err := s.repo.Update(subscription)
 	if err != nil {
-		s.logger.Println("update service error:", err)
+		s.logger.Println("update subscription error:", err)
 		return model.UpdateResponse{}, err
 	}
 	return updated, nil
 }
 
-func (s *ServiceUsecases) compareUpdate(old *model.Service, new *model.UpdateRequest) error {
+func (s *SubscriptionUsecases) compareUpdate(old *model.Subscription, new *model.UpdateRequest) error {
 	if new.Name != nil {
 		old.Name = *new.Name
 	}

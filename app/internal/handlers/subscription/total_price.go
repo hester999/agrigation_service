@@ -1,4 +1,4 @@
-package service_handler
+package subscription
 
 import (
 	"app/internal/apperr"
@@ -7,9 +7,9 @@ import (
 	"net/http"
 )
 
-// TotalPrice @Summary      Calculate total service price
-// @Description  Returns total sum of services by user and optional service name in date range
-// @Tags         Services
+// TotalPrice @Summary      Рассчитать общую стоимость подписок
+// @Description  Возвращает общую сумму подписок по пользователю и необязательное название услуги в указанном диапазоне дат
+// @Tags         Subscribtions
 // @Accept       json
 // @Produce      json
 // @Param        totalPriceRequest body dto.TotalRequestDTO true "Total price request"
@@ -17,8 +17,8 @@ import (
 // @Failure      400  {object}  dto.ErrDTO400
 // @Failure      404  {object}  dto.ErrDTO404
 // @Failure      500  {object}  dto.ErrDTO500
-// @Router       /services/total/{id} [post]
-func (s *ServiceHandler) TotalPrice(w http.ResponseWriter, r *http.Request) {
+// @Router       /subscriptions/total/{id} [post]
+func (s *SubscriptionHandler) TotalPrice(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
 	req := struct {
@@ -73,7 +73,7 @@ func (s *ServiceHandler) TotalPrice(w http.ResponseWriter, r *http.Request) {
 	}{res})
 }
 
-func (s *ServiceHandler) validateTotalPrice(id, name, from, to string) error {
+func (s *SubscriptionHandler) validateTotalPrice(id, name, from, to string) error {
 	if id == "" {
 		return apperr.ErrDataIsRequired
 	}

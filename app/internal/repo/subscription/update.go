@@ -1,4 +1,4 @@
-package service_repo
+package subscription
 
 import (
 	"app/internal/apperr"
@@ -7,16 +7,16 @@ import (
 	"errors"
 )
 
-func (s *ServiceRepo) Update(service model.Service) (model.UpdateResponse, error) {
+func (s *SubscriptionRepo) Update(subscription model.Subscription) (model.UpdateResponse, error) {
 
 	query := `UPDATE services SET id = $1, name = $2, price = $3, user_id = $4, start_date = $5, end_date = $6, created_at = $7 WHERE id = $1 RETURNING id, name, price, user_id, start_date, end_date, created_at`
 
 	var tmp DTO
-	err := s.db.Get(&tmp, query, service.ID, service.Name, service.Price, service.UserID, service.StartDate, service.EndDate, service.CreatedAt)
+	err := s.db.Get(&tmp, query, subscription.ID, subscription.Name, subscription.Price, subscription.UserID, subscription.StartDate, subscription.EndDate, subscription.CreatedAt)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			s.logger.Println("service not found")
+			s.logger.Println("subscription not found")
 			return model.UpdateResponse{}, apperr.ErrNotFound
 		}
 		s.logger.Println("update err:", err)

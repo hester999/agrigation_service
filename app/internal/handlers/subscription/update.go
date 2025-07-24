@@ -1,4 +1,4 @@
-package service_handler
+package subscription
 
 import (
 	"app/internal/apperr"
@@ -16,7 +16,7 @@ import (
 //
 //	Если передаётся `start_date`, то обязательно указывать `duration` — и наоборот.
 //
-// @Tags         Services
+// @Tags         Subscribtions
 // @Accept       json
 // @Produce      json
 // @Param        id   path      string       true  "ID услуги"
@@ -25,8 +25,8 @@ import (
 // @Failure      400  {object}  dto.ErrDTO400
 // @Failure      404  {object}  dto.ErrDTO404
 // @Failure      500  {object}  dto.ErrDTO500
-// @Router       /services/{id} [patch]
-func (s *ServiceHandler) UpdateHandler(w http.ResponseWriter, r *http.Request) {
+// @Router       /subscriptions/{id} [patch]
+func (s *SubscriptionHandler) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	id := mux.Vars(r)["id"]
 
@@ -69,7 +69,7 @@ func (s *ServiceHandler) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 		if errors.Is(err, apperr.ErrNotFound) {
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(ErrDTO{
-				Message: "Service not found",
+				Message: "Subscription not found",
 				Code:    http.StatusNotFound,
 			})
 			return
@@ -99,7 +99,7 @@ func (s *ServiceHandler) UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-func (s *ServiceHandler) validationUpdate(name *string, price *int, startDate *string, duration *int) error {
+func (s *SubscriptionHandler) validationUpdate(name *string, price *int, startDate *string, duration *int) error {
 	if name != nil && utf8.RuneCountInString(*name) > 50 {
 		return apperr.ErrNameTooLong
 	}
@@ -114,16 +114,3 @@ func (s *ServiceHandler) validationUpdate(name *string, price *int, startDate *s
 	}
 	return nil
 }
-
-//func (s *ServiceHandler) validationUpdate(name *string, price, duration *int) error {
-//	if name != nil && utf8.RuneCountInString(*name) > 50 {
-//		return apperr.ErrNameTooLong
-//	}
-//	if price != nil && *price <= 0 {
-//		return apperr.ErrInvalidPrice
-//	}
-//	if duration != nil && *duration <= 0 {
-//		return apperr.ErrInvalidDuration
-//	}
-//	return nil
-//}

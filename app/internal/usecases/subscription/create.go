@@ -1,4 +1,4 @@
-package service_usecases
+package subscription
 
 import (
 	"app/internal/model"
@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (s *ServiceUsecases) Create(request model.CreateRequest) (model.CreateResponse, error) {
+func (s *SubscriptionUsecases) Create(request model.CreateRequest) (model.CreateResponse, error) {
 
 	id, err := uuid.NewRandom()
 
@@ -20,7 +20,7 @@ func (s *ServiceUsecases) Create(request model.CreateRequest) (model.CreateRespo
 		return model.CreateResponse{}, err
 	}
 
-	newService := model.Service{
+	subscription := model.Subscription{
 		ID:        id.String(),
 		Name:      request.Name,
 		Price:     request.Price,
@@ -30,9 +30,10 @@ func (s *ServiceUsecases) Create(request model.CreateRequest) (model.CreateRespo
 		CreatedAt: time.Now().UTC(),
 	}
 
-	res, err := s.repo.Create(newService)
+	res, err := s.repo.Create(subscription)
+
 	if err != nil {
-		s.logger.Println("create service error:", err)
+		s.logger.Println("create subscription error:", err)
 		return model.CreateResponse{}, err
 	}
 	return res, nil

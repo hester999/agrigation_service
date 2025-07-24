@@ -4,12 +4,13 @@ import (
 	_ "app/docs"
 	"app/internal/config"
 	"app/internal/db"
-	"app/internal/handlers/service_handler"
-	_ "app/internal/handlers/service_handler"
+	_ "app/internal/handlers/subscription"
+	handler "app/internal/handlers/subscription"
 	"app/internal/logger"
-	"app/internal/repo/service_repo"
+	repo "app/internal/repo/subscription"
 	"app/internal/router"
-	"app/internal/usecases/service_usecases"
+	_ "app/internal/usecases/subscription"
+	uc "app/internal/usecases/subscription"
 	"fmt"
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -37,12 +38,12 @@ func main() {
 	var (
 		repoLoger    = logger.NewLogger("[repo]")
 		usecaseLoger = logger.NewLogger("[usecase]")
-		handlerLoger = logger.NewLogger("[handler]")
+		handlerLoger = logger.NewLogger("[subscription]")
 	)
 
-	repo := service_repo.NewServiceRepo(database, repoLoger)
-	usecases := service_usecases.NewService(repo, usecaseLoger)
-	handler := service_handler.NewServiceRepo(usecases, handlerLoger)
+	repo := repo.NewSubscriptionRepo(database, repoLoger)
+	usecases := uc.NewSubscriptionUsecases(repo, usecaseLoger)
+	handler := handler.NewSubscriptionHandler(usecases, handlerLoger)
 
 	r := mux.NewRouter()
 	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
@@ -54,5 +55,3 @@ func main() {
 	log.Println("Starting server on " + serverAddr)
 	log.Fatal(http.ListenAndServe(serverAddr, r))
 }
-
-//todo пагинация, сборка, тесты

@@ -1,4 +1,4 @@
--- db service
+-- db subscription
 
 -- Создание таблицы пользователей
 CREATE TABLE users (

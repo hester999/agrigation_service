@@ -7,14 +7,14 @@
         "version": "1.0"
     },
     "paths": {
-        "/api/v1/services": {
+        "/api/v1/subscriptions": {
             "get": {
                 "description": "Возвращает список всех подписок с пагинацией",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -40,19 +40,19 @@
                     "400": {
                         "description": "Некорректные limit или offset",
                         "schema": {
-                            "$ref": "#/definitions/service_handler.ErrDTO"
+                            "$ref": "#/definitions/subscription.ErrDTO"
                         }
                     },
                     "404": {
                         "description": "Подписки не найдены",
                         "schema": {
-                            "$ref": "#/definitions/service_handler.ErrDTOArr"
+                            "$ref": "#/definitions/subscription.ErrDTOArr"
                         }
                     },
                     "500": {
                         "description": "Внутренняя ошибка",
                         "schema": {
-                            "$ref": "#/definitions/service_handler.ErrDTO"
+                            "$ref": "#/definitions/subscription.ErrDTO"
                         }
                     }
                 }
@@ -66,7 +66,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -101,14 +101,14 @@
                 }
             }
         },
-        "/api/v1/services/{id}": {
+        "/api/v1/subscriptions/{id}": {
             "get": {
                 "description": "Возвращает подписку по её идентификатору",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -152,7 +152,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -182,9 +182,9 @@
                 }
             }
         },
-        "/services/total/{id}": {
+        "/subscriptions/total/{id}": {
             "post": {
-                "description": "Returns total sum of services by user and optional service name in date range",
+                "description": "Возвращает общую сумму подписок по пользователю и необязательное название услуги в указанном диапазоне дат",
                 "consumes": [
                     "application/json"
                 ],
@@ -192,7 +192,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -233,9 +233,9 @@
                 }
             }
         },
-        "/services/{id}": {
+        "/subscriptions/{id}": {
             "put": {
-                "description": "Полностью заменяет услугу по ID. Все поля обязательны для передачи.",
+                "description": "Полностью заменяет подписку по ID. Все поля обязательны для передачи.",
                 "consumes": [
                     "application/json"
                 ],
@@ -243,7 +243,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -293,7 +293,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -572,7 +572,7 @@
                 }
             }
         },
-        "service_handler.ErrDTO": {
+        "subscription.ErrDTO": {
             "type": "object",
             "properties": {
                 "code": {
@@ -583,7 +583,7 @@
                 }
             }
         },
-        "service_handler.ErrDTOArr": {
+        "subscription.ErrDTOArr": {
             "type": "object",
             "properties": {
                 "code": {

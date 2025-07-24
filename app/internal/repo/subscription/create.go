@@ -1,14 +1,14 @@
-package service_repo
+package subscription
 
 import "app/internal/model"
 
-func (s *ServiceRepo) Create(service model.Service) (model.CreateResponse, error) {
+func (s *SubscriptionRepo) Create(subscription model.Subscription) (model.CreateResponse, error) {
 
 	query := `INSERT INTO services(id, name, price, user_id, start_date, end_date, created_at) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id, name, price, user_id, start_date, end_date, created_at`
 
 	var tmp DTO
 
-	err := s.db.Get(&tmp, query, service.ID, service.Name, service.Price, service.UserID, service.StartDate, service.EndDate, service.CreatedAt)
+	err := s.db.Get(&tmp, query, subscription.ID, subscription.Name, subscription.Price, subscription.UserID, subscription.StartDate, subscription.EndDate, subscription.CreatedAt)
 
 	if err != nil {
 		s.logger.Println("create error:", err)

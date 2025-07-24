@@ -1,12 +1,12 @@
-package service_handler
+package subscription
 
 import (
 	"log"
 	"time"
 )
 
-type ServiceHandler struct {
-	usecase Service
+type SubscriptionHandler struct {
+	usecase subscriptionUsecases
 	logger  *log.Logger
 }
 
@@ -21,7 +21,7 @@ type ErrDTOArr struct {
 	Data    interface{} `json:"data"`
 }
 
-type ServiceDTO struct {
+type SubscriptionDTO struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"service_name"`
 	Price     int       `json:"price"`
@@ -31,8 +31,8 @@ type ServiceDTO struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-func NewServiceRepo(usecases Service, log *log.Logger) *ServiceHandler {
-	return &ServiceHandler{
+func NewSubscriptionHandler(usecases subscriptionUsecases, log *log.Logger) *SubscriptionHandler {
+	return &SubscriptionHandler{
 		usecase: usecases,
 		logger:  log,
 	}

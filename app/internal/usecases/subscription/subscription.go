@@ -1,4 +1,4 @@
-package service_usecases
+package subscription
 
 import (
 	"fmt"
@@ -7,19 +7,19 @@ import (
 	"time"
 )
 
-type ServiceUsecases struct {
-	repo   Service
+type SubscriptionUsecases struct {
+	repo   subscriptionRepo
 	logger *log.Logger
 }
 
-func NewService(repo Service, logger *log.Logger) *ServiceUsecases {
-	return &ServiceUsecases{
+func NewSubscriptionUsecases(repo subscriptionRepo, logger *log.Logger) *SubscriptionUsecases {
+	return &SubscriptionUsecases{
 		repo:   repo,
 		logger: logger,
 	}
 }
 
-func (s *ServiceUsecases) normalizeData(data string) (time.Time, error) {
+func (s *SubscriptionUsecases) normalizeData(data string) (time.Time, error) {
 	data = strings.TrimSpace(data)
 
 	if t, err := time.Parse("2006-01-02", data); err == nil {

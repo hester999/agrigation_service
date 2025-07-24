@@ -5,7 +5,7 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-    container_name: subscribe
+    container_name: subscription
     restart: always
     ports:
       - "9000:9000"

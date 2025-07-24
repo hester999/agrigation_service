@@ -2,7 +2,7 @@ package model
 
 import "time"
 
-type Service struct {
+type Subscription struct {
 	ID        string
 	Name      string
 	Price     int
@@ -52,7 +52,7 @@ type UpdateResponse struct {
 
 // ///////////////////////////////////////
 type GetAllResponse struct {
-	Data []Service
+	Data []Subscription
 }
 
 type TotalPriceRequest struct {

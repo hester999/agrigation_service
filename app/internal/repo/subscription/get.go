@@ -1,4 +1,4 @@
-package service_repo
+package subscription
 
 import (
 	"app/internal/apperr"
@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (s *ServiceRepo) GetByID(id string) (model.Service, error) {
+func (s *SubscriptionRepo) GetByID(id string) (model.Subscription, error) {
 
 	query := `SELECT id, name, price, user_id, start_date, end_date, created_at from services WHERE id = $1 `
 
@@ -18,12 +18,12 @@ func (s *ServiceRepo) GetByID(id string) (model.Service, error) {
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			s.logger.Println("GetByID error:", err)
-			return model.Service{}, apperr.ErrNotFound
+			return model.Subscription{}, apperr.ErrNotFound
 		}
 		s.logger.Println("GetByID error:", err)
-		return model.Service{}, err
+		return model.Subscription{}, err
 	}
-	res := model.Service{
+	res := model.Subscription{
 		ID:        tmp.ID,
 		Name:      tmp.Name,
 		Price:     tmp.Price,
@@ -35,7 +35,7 @@ func (s *ServiceRepo) GetByID(id string) (model.Service, error) {
 	return res, nil
 }
 
-func (s *ServiceRepo) GetAll(limit, offset int) (model.GetAllResponse, error) {
+func (s *SubscriptionRepo) GetAll(limit, offset int) (model.GetAllResponse, error) {
 
 	query := `SELECT id, name, price, user_id, start_date, end_date, created_at from services LIMIT $1 OFFSET $2;`
 
@@ -45,33 +45,33 @@ func (s *ServiceRepo) GetAll(limit, offset int) (model.GetAllResponse, error) {
 
 	if err != nil {
 		s.logger.Println("GetAll error:", err)
-		return model.GetAllResponse{Data: make([]model.Service, 0)}, err
+		return model.GetAllResponse{Data: make([]model.Subscription, 0)}, err
 	}
 
 	if len(tmp) == 0 {
-		s.logger.Println("Not found services")
-		return model.GetAllResponse{Data: make([]model.Service, 0)}, apperr.ErrNotFound
+		s.logger.Println("Not found subscription")
+		return model.GetAllResponse{Data: make([]model.Subscription, 0)}, apperr.ErrNotFound
 	}
 
 	res := model.GetAllResponse{
-		Data: make([]model.Service, 0, len(tmp)),
+		Data: make([]model.Subscription, 0, len(tmp)),
 	}
 
-	for _, service := range tmp {
-		res.Data = append(res.Data, model.Service{
-			ID:        service.ID,
-			Name:      service.Name,
-			Price:     service.Price,
-			UserID:    service.UserID,
-			StartDate: service.StartDate,
-			EndDate:   service.EndDate,
-			CreatedAt: service.CreatedAt,
+	for _, subscription := range tmp {
+		res.Data = append(res.Data, model.Subscription{
+			ID:        subscription.ID,
+			Name:      subscription.Name,
+			Price:     subscription.Price,
+			UserID:    subscription.UserID,
+			StartDate: subscription.StartDate,
+			EndDate:   subscription.EndDate,
+			CreatedAt: subscription.CreatedAt,
 		})
 	}
 	return res, nil
 }
 
-func (s *ServiceRepo) GetTotalPrice(userID, serviceName string, from, to time.Time) (int, error) {
+func (s *SubscriptionRepo) GetTotalPrice(userID, subscriptionName string, from, to time.Time) (int, error) {
 	builder := squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
 
 	query := builder.
@@ -85,8 +85,8 @@ func (s *ServiceRepo) GetTotalPrice(userID, serviceName string, from, to time.Ti
 	if userID != "" {
 		query = query.Where(squirrel.Eq{"user_id": userID})
 	}
-	if serviceName != "" {
-		query = query.Where(squirrel.Eq{"name": serviceName})
+	if subscriptionName != "" {
+		query = query.Where(squirrel.Eq{"name": subscriptionName})
 	}
 
 	sqlStr, args, err := query.ToSql()

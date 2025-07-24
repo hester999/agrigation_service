@@ -1,4 +1,4 @@
-package service_usecases
+package subscription
 
 import (
 	"app/internal/apperr"
@@ -7,14 +7,14 @@ import (
 	"time"
 )
 
-func (s *ServiceUsecases) Replace(id string, request model.CreateRequest) (model.CreateResponse, error) {
+func (s *SubscriptionUsecases) Replace(id string, request model.CreateRequest) (model.CreateResponse, error) {
 	start, err := s.normalizeData(request.StartDate)
 	if err != nil {
 		s.logger.Println("error parsing start date:", err)
 		return model.CreateResponse{}, err
 	}
 
-	newService := model.Service{
+	newSubscription := model.Subscription{
 		ID:        id,
 		Name:      request.Name,
 		Price:     request.Price,
@@ -28,7 +28,7 @@ func (s *ServiceUsecases) Replace(id string, request model.CreateRequest) (model
 	if err != nil {
 		if errors.Is(err, apperr.ErrNotFound) {
 			s.logger.Println("service not found, creating new one with id:", id)
-			res, err := s.repo.Create(newService)
+			res, err := s.repo.Create(newSubscription)
 			if err != nil {
 				s.logger.Println("error creating service:", err)
 				return model.CreateResponse{}, err
@@ -39,7 +39,7 @@ func (s *ServiceUsecases) Replace(id string, request model.CreateRequest) (model
 		return model.CreateResponse{}, err
 	}
 
-	updated, err := s.repo.Update(newService)
+	updated, err := s.repo.Update(newSubscription)
 	if err != nil {
 		s.logger.Println("error updating service:", err)
 		return model.CreateResponse{}, err

@@ -15,14 +15,14 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/services": {
+        "/api/v1/subscriptions": {
             "get": {
                 "description": "Возвращает список всех подписок с пагинацией",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -48,19 +48,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Некорректные limit или offset",
                         "schema": {
-                            "$ref": "#/definitions/service_handler.ErrDTO"
+                            "$ref": "#/definitions/subscription.ErrDTO"
                         }
                     },
                     "404": {
                         "description": "Подписки не найдены",
                         "schema": {
-                            "$ref": "#/definitions/service_handler.ErrDTOArr"
+                            "$ref": "#/definitions/subscription.ErrDTOArr"
                         }
                     },
                     "500": {
                         "description": "Внутренняя ошибка",
                         "schema": {
-                            "$ref": "#/definitions/service_handler.ErrDTO"
+                            "$ref": "#/definitions/subscription.ErrDTO"
                         }
                     }
                 }
@@ -74,7 +74,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -109,14 +109,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/services/{id}": {
+        "/api/v1/subscriptions/{id}": {
             "get": {
                 "description": "Возвращает подписку по её идентификатору",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -160,7 +160,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -190,9 +190,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/services/total/{id}": {
+        "/subscriptions/total/{id}": {
             "post": {
-                "description": "Returns total sum of services by user and optional service name in date range",
+                "description": "Возвращает общую сумму подписок по пользователю и необязательное название услуги в указанном диапазоне дат",
                 "consumes": [
                     "application/json"
                 ],
@@ -200,7 +200,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -241,9 +241,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/services/{id}": {
+        "/subscriptions/{id}": {
             "put": {
-                "description": "Полностью заменяет услугу по ID. Все поля обязательны для передачи.",
+                "description": "Полностью заменяет подписку по ID. Все поля обязательны для передачи.",
                 "consumes": [
                     "application/json"
                 ],
@@ -251,7 +251,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -301,7 +301,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Services"
+                    "Subscribtions"
                 ],
                 "parameters": [
                     {
@@ -580,7 +580,7 @@ const docTemplate = `{
                 }
             }
         },
-        "service_handler.ErrDTO": {
+        "subscription.ErrDTO": {
             "type": "object",
             "properties": {
                 "code": {
@@ -591,7 +591,7 @@ const docTemplate = `{
                 }
             }
         },
-        "service_handler.ErrDTOArr": {
+        "subscription.ErrDTOArr": {
             "type": "object",
             "properties": {
                 "code": {

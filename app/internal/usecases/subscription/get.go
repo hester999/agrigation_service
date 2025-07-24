@@ -1,17 +1,19 @@
-package service_usecases
+package subscription
 
-import "app/internal/model"
+import (
+	"app/internal/model"
+)
 
-func (s *ServiceUsecases) GetByID(id string) (model.Service, error) {
+func (s *SubscriptionUsecases) GetByID(id string) (model.Subscription, error) {
 	res, err := s.repo.GetByID(id)
 	if err != nil {
 		s.logger.Println("get service error: ", err)
-		return model.Service{}, err
+		return model.Subscription{}, err
 	}
 	return res, nil
 }
 
-func (s *ServiceUsecases) GetAll(limit, offset int) (model.GetAllResponse, error) {
+func (s *SubscriptionUsecases) GetAll(limit, offset int) (model.GetAllResponse, error) {
 	if limit == 0 {
 		limit = 10
 	}
@@ -23,7 +25,7 @@ func (s *ServiceUsecases) GetAll(limit, offset int) (model.GetAllResponse, error
 	return res, nil
 }
 
-func (s *ServiceUsecases) GetTotalPrice(userID, serviceName, from, to string) (int, error) {
+func (s *SubscriptionUsecases) GetTotalPrice(userID, subscriptionName, from, to string) (int, error) {
 
 	fromDate, err := s.normalizeData(from)
 	if err != nil {
@@ -36,7 +38,7 @@ func (s *ServiceUsecases) GetTotalPrice(userID, serviceName, from, to string) (i
 		return 0, err
 	}
 
-	res, err := s.repo.GetTotalPrice(userID, serviceName, fromDate, toDate)
+	res, err := s.repo.GetTotalPrice(userID, subscriptionName, fromDate, toDate)
 	if err != nil {
 		s.logger.Println("get service error: ", err)
 		return 0, err

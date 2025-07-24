@@ -1,4 +1,4 @@
-package service_repo
+package subscription
 
 import (
 	"github.com/jmoiron/sqlx"
@@ -6,13 +6,13 @@ import (
 	"time"
 )
 
-type ServiceRepo struct {
+type SubscriptionRepo struct {
 	db     *sqlx.DB
 	logger *log.Logger
 }
 
-func NewServiceRepo(db *sqlx.DB, logger *log.Logger) *ServiceRepo {
-	return &ServiceRepo{
+func NewSubscriptionRepo(db *sqlx.DB, logger *log.Logger) *SubscriptionRepo {
+	return &SubscriptionRepo{
 		db:     db,
 		logger: logger,
 	}

@@ -1,10 +1,10 @@
-package service_repo
+package subscription
 
 import (
 	"app/internal/apperr"
 )
 
-func (s *ServiceRepo) DeleteByID(id string) error {
+func (s *SubscriptionRepo) DeleteByID(id string) error {
 	query := `DELETE FROM services WHERE id = $1`
 	res, err := s.db.Exec(query, id)
 	if err != nil {
@@ -19,7 +19,7 @@ func (s *ServiceRepo) DeleteByID(id string) error {
 	}
 
 	if rowsAffected == 0 {
-		s.logger.Println("Delete error: service not found")
+		s.logger.Println("Delete error: subscription not found")
 		return apperr.ErrNotFound
 	}
 

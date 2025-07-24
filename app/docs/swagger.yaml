@@ -163,14 +163,14 @@ definitions:
         example: user_001
         type: string
     type: object
-  service_handler.ErrDTO:
+  subscription.ErrDTO:
     properties:
       code:
         type: integer
       message:
         type: string
     type: object
-  service_handler.ErrDTOArr:
+  subscription.ErrDTOArr:
     properties:
       code:
         type: integer
@@ -184,7 +184,7 @@ info:
   title: Aggregation Service API
   version: "1.0"
 paths:
-  /api/v1/services:
+  /api/v1/subscriptions:
     get:
       description: Возвращает список всех подписок с пагинацией
       parameters:
@@ -206,17 +206,17 @@ paths:
         "400":
           description: Некорректные limit или offset
           schema:
-            $ref: '#/definitions/service_handler.ErrDTO'
+            $ref: '#/definitions/subscription.ErrDTO'
         "404":
           description: Подписки не найдены
           schema:
-            $ref: '#/definitions/service_handler.ErrDTOArr'
+            $ref: '#/definitions/subscription.ErrDTOArr'
         "500":
           description: Внутренняя ошибка
           schema:
-            $ref: '#/definitions/service_handler.ErrDTO'
+            $ref: '#/definitions/subscription.ErrDTO'
       tags:
-      - Services
+      - Subscribtions
     post:
       consumes:
       - application/json
@@ -244,8 +244,8 @@ paths:
           schema:
             $ref: '#/definitions/dto.ErrDTO500'
       tags:
-      - Services
-  /api/v1/services/{id}:
+      - Subscribtions
+  /api/v1/subscriptions/{id}:
     delete:
       description: Удаляет подписку по ID
       parameters:
@@ -268,7 +268,7 @@ paths:
           schema:
             $ref: '#/definitions/dto.ErrDTO500'
       tags:
-      - Services
+      - Subscribtions
     get:
       description: Возвращает подписку по её идентификатору
       parameters:
@@ -297,8 +297,8 @@ paths:
           schema:
             $ref: '#/definitions/dto.ErrDTO500'
       tags:
-      - Services
-  /services/{id}:
+      - Subscribtions
+  /subscriptions/{id}:
     patch:
       consumes:
       - application/json
@@ -336,11 +336,11 @@ paths:
           schema:
             $ref: '#/definitions/dto.ErrDTO500'
       tags:
-      - Services
+      - Subscribtions
     put:
       consumes:
       - application/json
-      description: Полностью заменяет услугу по ID. Все поля обязательны для передачи.
+      description: Полностью заменяет подписку по ID. Все поля обязательны для передачи.
       parameters:
       - description: ID услуги
         in: path
@@ -369,13 +369,13 @@ paths:
           schema:
             $ref: '#/definitions/dto.ErrDTO500'
       tags:
-      - Services
-  /services/total/{id}:
+      - Subscribtions
+  /subscriptions/total/{id}:
     post:
       consumes:
       - application/json
-      description: Returns total sum of services by user and optional service name
-        in date range
+      description: Возвращает общую сумму подписок по пользователю и необязательное
+        название услуги в указанном диапазоне дат
       parameters:
       - description: Total price request
         in: body
@@ -403,5 +403,5 @@ paths:
           schema:
             $ref: '#/definitions/dto.ErrDTO500'
       tags:
-      - Services
+      - Subscribtions
 swagger: "2.0"

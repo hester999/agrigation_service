@@ -1,31 +1,27 @@
-package service_handler
+package subscription
 
 import (
+	"app/internal/apperr"
 	"app/internal/model"
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"net/http"
 	"time"
+	"unicode/utf8"
 )
 
-// Replace @Summary      Полная замена подписки
-// @Description  Полностью заменяет услугу по ID. Все поля обязательны для передачи.
-//
-//	Возвращает обновлённую сущность.
-//
-// @Tags         Services
+// CreateHandler @Summary      Создание новой подписки
+// @Description  Создает подписку пользователю с начальной датой и длительностью
+// @Tags         Subscribtions
 // @Accept       json
 // @Produce      json
-// @Param        id   path      string           true  "ID услуги"
-// @Param        body body      dto.CreateRequest true  "Полные данные новой подписки"
-// @Success      200  {object}  dto.CreateResponse
-// @Failure      400  {object}  dto.ErrDTO400
-// @Failure      500  {object}  dto.ErrDTO500
-// @Router       /services/{id} [put]
-func (s *ServiceHandler) Replace(w http.ResponseWriter, r *http.Request) {
+// @Param        request body dto.CreateRequest true "Параметры подписки"
+// @Success      201 {object} dto.CreateResponse
+// @Failure      400 {object} dto.ErrDTO400
+// @Failure      500 {object} dto.ErrDTO500
+// @Router       /api/v1/subscriptions [post]
+func (s *SubscriptionHandler) CreateHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	id := mux.Vars(r)["id"]
 	req := struct {
 		Name      string `json:"service_name"`
 		Price     int    `json:"price"`
@@ -35,9 +31,8 @@ func (s *ServiceHandler) Replace(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	err := json.NewDecoder(r.Body).Decode(&req)
-
 	if err != nil {
-		s.logger.Println("Error decoding request body", err)
+		s.logger.Println("Error in decoding request body", err)
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(ErrDTO{
 			Message: "invalid JSON",
@@ -47,7 +42,6 @@ func (s *ServiceHandler) Replace(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = s.validateCreate(req.Name, req.Price, req.UserID, req.StartDate, req.Duration)
-
 	if err != nil {
 		s.logger.Println("Error in validating request body", err)
 		w.WriteHeader(http.StatusBadRequest)
@@ -66,10 +60,9 @@ func (s *ServiceHandler) Replace(w http.ResponseWriter, r *http.Request) {
 		Duration:  req.Duration,
 	}
 
-	res, err := s.usecase.Replace(id, modelReq)
-
+	res, err := s.usecase.Create(modelReq)
 	if err != nil {
-		s.logger.Println("Error updating request", err)
+		s.logger.Println("Error in creating request", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(ErrDTO{
 			Message: "Internal Server Error",
@@ -77,6 +70,7 @@ func (s *ServiceHandler) Replace(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
 	resp := struct {
 		ID        string    `json:"id"`
 		Name      string    `json:"service_name"`
@@ -87,6 +81,33 @@ func (s *ServiceHandler) Replace(w http.ResponseWriter, r *http.Request) {
 		CreatedAt time.Time `json:"created_at"`
 	}{res.ID, res.Name, res.Price, res.UserID, res.StartDate, res.EndDate, res.CreatedAt}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(resp)
+
+}
+
+func (s *SubscriptionHandler) validateCreate(name string, price int, userID string, startDate string, duration int) error {
+	if utf8.RuneCountInString(name) > 50 {
+		return apperr.ErrNameTooLong
+	}
+
+	if name == "" {
+		return apperr.ErrNameIsRequired
+	}
+	if price <= 0 {
+		return apperr.ErrInvalidPrice
+	}
+
+	if userID == "" {
+		return apperr.ErrUserIsRequired
+	}
+
+	if startDate == "" {
+		return apperr.ErrDataIsRequired
+	}
+
+	if duration <= 0 {
+		return apperr.ErrInvalidDuration
+	}
+	return nil
 }

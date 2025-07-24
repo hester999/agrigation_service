@@ -1,7 +1,7 @@
 APP_NAME=app
 OUTPUT_PATH=build
 
-.PHONY: build run clean swag
+.PHONY: build run clean swag test test-cover
 
 build:
 	mkdir -p $(OUTPUT_PATH)
@@ -15,3 +15,6 @@ clean:
 
 swag:
 	swag init --generalInfo cmd/main.go --parseInternal --output ./docs
+
+test:
+	go test -v ./...

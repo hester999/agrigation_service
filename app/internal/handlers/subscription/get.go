@@ -1,4 +1,4 @@
-package service_handler
+package subscription
 
 import (
 	"app/internal/apperr"
@@ -10,20 +10,20 @@ import (
 )
 
 type ResponseDTO struct {
-	Data []ServiceDTO `json:"data"`
+	Data []SubscriptionDTO `json:"data"`
 }
 
 // GetByID @Summary      Получить подписку по ID
 // @Description  Возвращает подписку по её идентификатору
-// @Tags         Services
+// @Tags         Subscribtions
 // @Produce      json
 // @Param        id path string true "ID подписки"
 // @Success      200 {object} dto.ServiceDTO
 // @Failure      400 {object} dto.ErrDTO400 "ID не передан"
 // @Failure      404 {object} dto.ErrDTO404 "Подписка не найдена"
 // @Failure      500 {object} dto.ErrDTO500 "Внутренняя ошибка"
-// @Router       /api/v1/services/{id} [get]
-func (s *ServiceHandler) GetByID(w http.ResponseWriter, r *http.Request) {
+// @Router       /api/v1/subscriptions/{id} [get]
+func (s *SubscriptionHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	id := mux.Vars(r)["id"]
@@ -57,7 +57,7 @@ func (s *ServiceHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	resp := ServiceDTO{
+	resp := SubscriptionDTO{
 		res.ID,
 		res.Name,
 		res.Price,
@@ -73,16 +73,16 @@ func (s *ServiceHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 
 // GetAll  @Summary      Получить все подписки
 // @Description  Возвращает список всех подписок с пагинацией
-// @Tags         Services
+// @Tags         Subscribtions
 // @Produce      json
 // @Param        limit  query int false "Ограничение количества результатов"
 // @Param        offset query int false "Смещение для пагинации"
 // @Success      200 {object} dto.ResponseDTO
-// @Failure      400 {object} service_handler.ErrDTO "Некорректные limit или offset"
-// @Failure      404 {object} service_handler.ErrDTOArr "Подписки не найдены"
-// @Failure      500 {object} service_handler.ErrDTO "Внутренняя ошибка"
-// @Router       /api/v1/services [get]
-func (s *ServiceHandler) GetAll(w http.ResponseWriter, r *http.Request) {
+// @Failure      400 {object} subscription.ErrDTO "Некорректные limit или offset"
+// @Failure      404 {object} subscription.ErrDTOArr "Подписки не найдены"
+// @Failure      500 {object} subscription.ErrDTO "Внутренняя ошибка"
+// @Router       /api/v1/subscriptions [get]
+func (s *SubscriptionHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	var limit, offset int
@@ -148,11 +148,11 @@ func (s *ServiceHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := ResponseDTO{
-		Data: make([]ServiceDTO, 0, len(res.Data)),
+		Data: make([]SubscriptionDTO, 0, len(res.Data)),
 	}
 
 	for _, service := range res.Data {
-		resp.Data = append(resp.Data, ServiceDTO{
+		resp.Data = append(resp.Data, SubscriptionDTO{
 			ID:        service.ID,
 			Name:      service.Name,
 			Price:     service.Price,
@@ -167,7 +167,7 @@ func (s *ServiceHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-func (s *ServiceHandler) validateLimitOffset(limit, offset int) error {
+func (s *SubscriptionHandler) validateLimitOffset(limit, offset int) error {
 	if limit < 0 {
 		return apperr.ErrInvalidLimit
 	}
