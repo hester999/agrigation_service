@@ -808,6 +808,37 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "продляет подписку , пересчитывает дату окончания",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"duration\": 2\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:9000/api/v1/subscriptions/0d4c51ad-b037-4471-a191-b5bb22f00cf8",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9000",
+									"path": [
+										"api",
+										"v1",
+										"subscriptions",
+										"0d4c51ad-b037-4471-a191-b5bb22f00cf8"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},

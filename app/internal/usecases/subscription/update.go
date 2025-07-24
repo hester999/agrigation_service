@@ -44,5 +44,10 @@ func (s *SubscriptionUsecases) compareUpdate(old *model.Subscription, new *model
 		old.StartDate = start
 		old.EndDate = start.AddDate(0, *new.Duration, 0).UTC()
 	}
+
+	if new.Duration != nil {
+		newEndDate := old.EndDate.AddDate(0, *new.Duration, 0).UTC()
+		old.EndDate = newEndDate
+	}
 	return nil
 }

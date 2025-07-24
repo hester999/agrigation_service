@@ -109,7 +109,7 @@ func (s *SubscriptionHandler) validationUpdate(name *string, price *int, startDa
 	if duration != nil && *duration <= 0 {
 		return apperr.ErrInvalidDuration
 	}
-	if (startDate != nil && duration == nil) || (startDate == nil && duration != nil) {
+	if startDate != nil && duration == nil {
 		return apperr.ErrStartDateDurationPair
 	}
 	return nil
